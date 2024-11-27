@@ -23,7 +23,7 @@ func MiddlewareDBBegin(f func(ctx *yafeng.Context)) func(ctx *yafeng.Context) {
 func MiddlewareCheckToken(f func(ctx *yafeng.Context)) func(ctx *yafeng.Context) {
 	return func(ctx *yafeng.Context) {
 		if ctx.R.URL.Path != "/api/user/login" {
-			checkToken(ctx)
+			checkAuth(ctx)
 		}
 
 		f(ctx)

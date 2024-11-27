@@ -62,7 +62,7 @@ let token = localStorage.getItem("token") || ''
 
 axiosInstance.interceptors.request.use(function (config) {
 	showSpin()
-	if (token) config.headers["token"] = token
+	if (token) config.headers["Authorization"] = "Bearer " + token
 	return config;
 }, function (error) {
 	hideSpin();

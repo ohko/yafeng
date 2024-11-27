@@ -18,9 +18,9 @@
 <script setup>
 	import { ref, onMounted } from 'vue';
 	import { useRoute, useRouter } from 'vue-router';
-	import { useTokenStore } from '@/store/token'
-
-	const tokenStore = useTokenStore()
+	import { useAuthStore } from '@/store/auth'
+	
+	const authStore = useAuthStore()
 	const router = useRouter()
 	const form = ref({ Password: "", Password2: "" })
 

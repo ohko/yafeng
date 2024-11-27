@@ -1,4 +1,4 @@
-package token
+package auth
 
 import (
 	"crypto/aes"
@@ -15,20 +15,20 @@ const (
 	aesKey = "1234567887654321"
 )
 
-type Token struct {
+type Auth struct {
 	UserID int
 	IP     string
 }
 
-func NewToken(userID int, ip string) config.IToken {
-	return &Token{UserID: userID, IP: ip}
+func NewAuth(userID int, ip string) config.IAuth {
+	return &Auth{UserID: userID, IP: ip}
 }
 
-func (o Token) GetUserID() int {
+func (o Auth) GetUserID() int {
 	return o.UserID
 }
 
-func (o Token) EnToken() (string, error) {
+func (o Auth) EnToken() (string, error) {
 	bs, err := json.Marshal(&o)
 	if err != nil {
 		return "", err
@@ -40,7 +40,7 @@ func (o Token) EnToken() (string, error) {
 	return hex.EncodeToString(result), nil
 }
 
-func (o *Token) DeToken(token string) error {
+func (o *Auth) DeToken(token string) error {
 	if token == "" || token == "undefined" {
 		return errors.New("need token")
 	}

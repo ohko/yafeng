@@ -1,0 +1,23 @@
+meta {
+  name: 信息
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseURL}}/api/user/info
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {}
+}
+
+assert {
+  res.body.no: eq 0
+}

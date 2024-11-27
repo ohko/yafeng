@@ -1,0 +1,28 @@
+meta {
+  name: 登陆
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseURL}}/api/user/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "Account": "demo",
+    "Password": "demo"
+  }
+}
+
+assert {
+  res.body.no: eq 0
+}
+
+script:post-response {
+  if(res.body.no==0){
+    bru.setVar("token", res.body.data.Token);
+  }
+}

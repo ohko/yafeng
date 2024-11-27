@@ -1,5 +1,5 @@
 <template>
-	<a-layout style="height: 100%;" v-if="tokenStore.token">
+	<a-layout style="height: 100%;" v-if="authStore.token">
 		<a-layout-sider breakpoint="lg" collapsed-width="0" @collapse="onCollapse" @breakpoint="onBreakpoint">
 			<div class="logo">
 				<h1>Admin</h1>
@@ -52,10 +52,10 @@
 <script setup>
 	import { ref, onBeforeMount } from 'vue'
 	import { useRoute, useRouter } from 'vue-router';
-	import { useTokenStore } from '@/store/token'
+	import { useAuthStore } from '@/store/auth'
 	import { menus } from '@/routes'
 
-	const tokenStore = useTokenStore()
+	const authStore = useAuthStore()
 	const route = useRoute();
 	const router = useRouter()
 
@@ -84,12 +84,12 @@
 	if (selectedKeys.value.length == 0) selectedKeys.value = [menus[0].key]
 
 	function logout() {
-		tokenStore.logout()
+		authStore.logout()
 		router.push({ path: '/login' })
 	}
 
 	onBeforeMount(_ => {
-		if (!tokenStore.token && route.path != "/login") {
+		if (!authStore.token && route.path != "/login") {
 			router.push({ path: '/login' })
 		}
 	})

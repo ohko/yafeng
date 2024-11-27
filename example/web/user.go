@@ -2,7 +2,7 @@ package web
 
 import (
 	"example/biz"
-	"example/bsvs/token"
+	"example/bsvs/auth"
 
 	"github.com/ohko/yafeng"
 )
@@ -33,8 +33,8 @@ func (User) Login(ctx *yafeng.Context) {
 		ctx.Close()
 	}
 
-	// 设置token
-	tk := token.NewToken(info.ID, ctx.GetRealIP())
+	// 设置auth
+	tk := auth.NewAuth(info.ID, ctx.GetRealIP())
 	info.Token, err = tk.EnToken()
 	if err != nil {
 		ctx.JsonFailed(err.Error())
@@ -42,14 +42,14 @@ func (User) Login(ctx *yafeng.Context) {
 	}
 
 	// 返回登陆信息
-	ctx.W.Header().Set("token", info.Token)
+	ctx.SetAuthorization(info.Token)
 	ctx.JsonSuccess(info)
 }
 
 // Change 修改密码
 func (User) Change(ctx *yafeng.Context) {
-	// 获取token
-	token := checkToken(ctx)
+	// 获取auth
+	auth := checkAuth(ctx)
 
 	// 用户输入数据结构
 	var data struct {
@@ -63,7 +63,7 @@ func (User) Change(ctx *yafeng.Context) {
 	}
 
 	// 获取信息
-	if err := biz.UserChange(ctx, token.GetUserID(), data.Password); err != nil {
+	if err := biz.UserChange(ctx, auth.GetUserID(), data.Password); err != nil {
 		ctx.JsonFailed(err.Error())
 		ctx.Close()
 	}
@@ -74,11 +74,11 @@ func (User) Change(ctx *yafeng.Context) {
 
 // Info 获取用户信息
 func (User) Info(ctx *yafeng.Context) {
-	// 获取token
-	token := checkToken(ctx)
+	// 获取auth
+	auth := checkAuth(ctx)
 
 	// 获取信息
-	info, err := biz.UserInfo(ctx, token.GetUserID())
+	info, err := biz.UserInfo(ctx, auth.GetUserID())
 	if err != nil {
 		ctx.JsonFailed(err.Error())
 		ctx.Close()

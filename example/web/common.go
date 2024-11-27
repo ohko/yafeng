@@ -2,15 +2,15 @@
 package web
 
 import (
-	"example/bsvs/token"
+	"example/bsvs/auth"
 	"example/config"
 
 	"github.com/ohko/yafeng"
 )
 
-func checkToken(ctx *yafeng.Context) config.IToken {
-	tk := token.NewToken(0, "")
-	if err := tk.DeToken(ctx.R.Header.Get("token")); err != nil {
+func checkAuth(ctx *yafeng.Context) config.IAuth {
+	tk := auth.NewAuth(0, "")
+	if err := tk.DeToken(ctx.GetAuthorization()); err != nil {
 		ctx.JsonFailed(err.Error())
 		ctx.Close()
 	}

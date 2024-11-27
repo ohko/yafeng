@@ -1,7 +1,7 @@
 <template>
 	<HelloWorld msg="Hello world!"></HelloWorld>
 	<a-card>
-		Token: <RouterLink to="/login">{{tokenStore.token}}</RouterLink>
+		Token: <RouterLink to="/login">{{authStore.token}}</RouterLink>
 		<hr>
 		Account: {{userInfo.Account}}
 	</a-card>
@@ -9,9 +9,9 @@
 
 <script setup>
 	import { ref, onMounted } from 'vue';
-	import { useTokenStore } from '@/store/token'
-	const tokenStore = useTokenStore()
+	import { useAuthStore } from '@/store/auth'
 
+	const authStore = useAuthStore()
 	const userInfo = ref({})
 
 	onMounted(async _ => {

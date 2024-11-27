@@ -1,0 +1,25 @@
+meta {
+  name: 修改
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseURL}}/api/user/change
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "Password": "demo"
+  }
+}
+
+assert {
+  res.body.no: eq 0
+}

@@ -23,16 +23,16 @@
 <script setup>
 	import { ref, onMounted } from 'vue';
 	import { useRoute, useRouter } from 'vue-router';
-	import { useTokenStore } from '@/store/token'
+	import { useAuthStore } from '@/store/auth'
 
-	const tokenStore = useTokenStore()
+	const authStore = useAuthStore()
 	const router = useRouter()
-	const form = ref({ Account: tokenStore.account, Password: tokenStore.password, Remember: true })
+	const form = ref({ Account: authStore.account, Password: authStore.password, Remember: true })
 
 	const onFinish = async (values) => {
 		const info = await post("/api/user/login", { data: form.value })
 		if (info) {
-			if (form.value.Remember) tokenStore.save(form.value.Account, form.value.Password, info.Token)
+			if (form.value.Remember) authStore.save(form.value.Account, form.value.Password, info.Token)
 			message.success("success")
 			router.push({ path: '/' })
 		}

@@ -72,14 +72,14 @@ func TestUser_Info(t *testing.T) {
 	}{
 		{Token: ``, Want: "need token"},
 		{Token: `123`, Want: "token error"},
-		{Token: `5d7d96e4e7c526bcb4b1fcc6dc0de84fadf399bc6f51564efef7651977031b50710c898f`, Want: "请先登陆"},
+		{Token: `5d7d96e4e7c526bcb4b1fcc6dc0de84fadf399bc6f51564efef7651977031b50710c898f`, Want: ""},
 	} {
 		w := httptest.NewRecorder()
 		r, err := http.NewRequest("GET", "/api/user/info", nil)
 		if err != nil {
 			t.Fatal(err)
 		}
-		r.Header.Set("Token", v.Token)
+		r.Header.Set("Authorization", "Bearer "+v.Token)
 
 		http.HandlerFunc(yafeng.TestMiddleware(user.Info, MiddlewareDBBegin, MiddlewareCheckToken)).ServeHTTP(w, r)
 		p, err := (&fastjson.Parser{}).ParseBytes(w.Body.Bytes())

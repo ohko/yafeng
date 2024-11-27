@@ -37,6 +37,14 @@ func NewContext(w http.ResponseWriter, r *http.Request) *Context {
 	return &Context{W: w, R: r, Ctx: context.Background(), FlowID: GenerateNonce(6)}
 }
 
+func (o Context) SetAuthorization(token string) {
+	o.W.Header().Set("Authorization", "Bearer "+token)
+}
+
+func (o Context) GetAuthorization() string {
+	return strings.TrimPrefix(o.R.Header.Get("Authorization"), "Bearer ")
+}
+
 func (o Context) ParsePostData(v any) error {
 	if o.R.Body == nil {
 		return errors.New("body empty")
