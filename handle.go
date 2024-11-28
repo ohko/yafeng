@@ -4,6 +4,8 @@ import (
 	"embed"
 	"log"
 	"net/http"
+	"net/http/httputil"
+	"net/url"
 	"os"
 	"reflect"
 	"runtime"
@@ -53,6 +55,27 @@ func (o *YaFeng) HandleStatic(path, folder string) {
 		} else {
 			http.ServeFile(w, r, folder+realUrlPath)
 		}
+	})
+}
+
+func (o *YaFeng) HandleProxy(path, uri string) {
+	path = strings.TrimSuffix(path, "/")
+	http.HandleFunc(path+"/", func(w http.ResponseWriter, r *http.Request) {
+		targetUrl, _ := url.Parse(uri)
+		proxy := httputil.NewSingleHostReverseProxy(targetUrl)
+		proxy.Director = func(req *http.Request) {
+			req.URL.Scheme = targetUrl.Scheme
+			req.URL.Host = targetUrl.Host
+			req.URL.Path = strings.TrimPrefix(req.URL.Path, path)
+			if req.URL.Scheme == "wss:" {
+				req.Header.Set("Connection", "upgrade")
+				req.Header.Set("Upgrade", "websocket")
+			}
+		}
+		proxy.ErrorHandler = func(w http.ResponseWriter, r *http.Request, err error) {
+			w.WriteHeader(http.StatusBadGateway)
+		}
+		proxy.ServeHTTP(w, r)
 	})
 }
 
