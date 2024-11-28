@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host=0.0.0.0",
-    "build": "vite build --outDir ./dist --base=/",
-    "preview": "vite preview --outDir ./dist --base=/"
+    "build": "vite build --emptyOutDir --outDir ./public --base=/",
+    "preview": "vite preview --outDir ./public --base=/"
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
