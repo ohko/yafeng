@@ -11,7 +11,7 @@
 					<a-sub-menu :key="menu.key" v-if="menu.children">
 						<template #title>
 							<span>
-								<component :is="menu.icon"></component>
+								<component :is="icons[menu.icon]"></component>
 								{{menu.name}}
 							</span>
 						</template>
@@ -22,7 +22,7 @@
 					</a-sub-menu>
 
 					<a-menu-item :key="menu.key" v-if="!menu.children">
-						<component :is="menu.icon"></component>
+						<component :is="icons[menu.icon]"></component>
 						<span class="nav-text">
 							<RouterLink :to="menu.to" v-if="menu.to">{{menu.name}}</RouterLink>
 							<a :href="menu.href" v-if="menu.href" :target="menu.target">{{menu.name}}</a>
@@ -54,7 +54,9 @@
 	import { useRoute, useRouter } from 'vue-router';
 	import { useAuthStore } from '@/store/auth'
 	import { menus } from '@/routes'
+	import { MenuOutlined } from '@ant-design/icons-vue';
 
+	const icons = { MenuOutlined };
 	const authStore = useAuthStore()
 	const route = useRoute();
 	const router = useRouter()
