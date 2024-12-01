@@ -3,3 +3,4 @@
 sqlite.db
 node_modules
 dist
+public
