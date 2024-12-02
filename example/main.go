@@ -19,7 +19,7 @@ func main() {
 	log.SetFlags(log.Flags() | log.Lshortfile)
 
 	// 解析.env
-	if _, err := yafeng.ReadDotEnv(); err != nil {
+	if _, err := yafeng.ReadDotEnv(".env"); err != nil {
 		log.Fatal(err)
 	}
 

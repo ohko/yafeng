@@ -6,8 +6,8 @@ import (
 	"strings"
 )
 
-func ReadDotEnv() (map[string]string, error) {
-	file, err := os.Open(".env")
+func ReadDotEnv(envPath string) (map[string]string, error) {
+	file, err := os.Open(envPath)
 	if err != nil {
 		return nil, err
 	}
