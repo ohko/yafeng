@@ -4,6 +4,7 @@ go 1.22.6
 
 require (
 	github.com/glebarez/sqlite v1.11.0
+	gorm.io/driver/mysql v1.5.7
 	gorm.io/driver/postgres v1.5.10
 	gorm.io/gorm v1.25.12
 	gorm.io/plugin/dbresolver v1.5.3
@@ -12,6 +13,7 @@ require (
 require (
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/glebarez/go-sqlite v1.21.2 // indirect
+	github.com/go-sql-driver/mysql v1.7.0 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect

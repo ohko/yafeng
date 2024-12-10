@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/glebarez/sqlite"
+	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -15,7 +16,10 @@ import (
 	"gorm.io/plugin/dbresolver"
 )
 
-func NewDB(models ...interface{}) (*gorm.DB, error) {
+// "./sqlite.db"
+// postgres://postgres:postgres@postgres/gorm?sslmode=disable&TimeZone=Asia/Shanghai
+// mysql://gorm:gorm@tcp(127.0.0.1:3306)/gorm?charset=utf8&parseTime=True&loc=Local
+func NewDB(dsn string, models ...interface{}) (*gorm.DB, error) {
 	sqlLevel, _ := strconv.Atoi(GetEnv("SQL_LEVEL", "0"))
 	newLogger := logger.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags),
@@ -41,14 +45,23 @@ func NewDB(models ...interface{}) (*gorm.DB, error) {
 		Logger:                 newLogger,
 	}
 
-	dbPath := GetEnv("DSN", "./sqlite.db")
-	var dsn gorm.Dialector
-	if strings.HasPrefix(dbPath, "postgres://") {
-		dsn = postgres.Open(dbPath)
+	var dial gorm.Dialector
+	if strings.HasPrefix(dsn, "postgres://") {
+		dial = postgres.Open(dsn)
+	} else if strings.HasPrefix(dsn, "mysql://") {
+		dial = mysql.New(mysql.Config{
+			// DSN:                       "gorm:gorm@tcp(127.0.0.1:3306)/gorm?charset=utf8&parseTime=True&loc=Local", // data source name
+			DSN:                       strings.TrimPrefix(dsn, "mysql://"), // data source name
+			DefaultStringSize:         256,                                 // default size for string fields
+			DisableDatetimePrecision:  true,                                // disable datetime precision, which not supported before MySQL 5.6
+			DontSupportRenameIndex:    true,                                // drop & create when rename index, rename index not supported before MySQL 5.7, MariaDB
+			DontSupportRenameColumn:   true,                                // `change` when rename column, rename column not supported before MySQL 8, MariaDB
+			SkipInitializeWithVersion: false,                               // auto configure based on currently MySQL version
+		})
 	} else {
-		dsn = sqlite.Open(dbPath)
+		dial = sqlite.Open(dsn)
 	}
-	db, err := gorm.Open(dsn, &options)
+	db, err := gorm.Open(dial, &options)
 	if err != nil {
 		return nil, err
 	}

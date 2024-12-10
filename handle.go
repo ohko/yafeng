@@ -60,13 +60,13 @@ func (o *YaFeng) HandleStatic(path, folder string) {
 
 func (o *YaFeng) HandleProxy(path, uri string) {
 	path = strings.TrimSuffix(path, "/")
-	http.HandleFunc(path+"/", func(w http.ResponseWriter, r *http.Request) {
+	o.m.HandleFunc(path+"/", func(w http.ResponseWriter, r *http.Request) {
 		targetUrl, _ := url.Parse(uri)
 		proxy := httputil.NewSingleHostReverseProxy(targetUrl)
 		proxy.Director = func(req *http.Request) {
 			req.URL.Scheme = targetUrl.Scheme
 			req.URL.Host = targetUrl.Host
-			req.URL.Path = strings.TrimPrefix(req.URL.Path, path)
+			req.URL.Path = targetUrl.Path + strings.TrimPrefix(strings.TrimPrefix(req.URL.Path, path), "/")
 			if req.URL.Scheme == "wss:" {
 				req.Header.Set("Connection", "upgrade")
 				req.Header.Set("Upgrade", "websocket")
