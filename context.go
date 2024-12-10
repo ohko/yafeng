@@ -29,10 +29,8 @@ type Context struct {
 }
 
 type JSONData struct {
-	No      int    `json:"no"` // 0=无错/大于0业务错误/小于0框架内错误
-	Data    any    `json:"data"`
-	Error   string `json:"error"`
-	Message string `json:"message"`
+	No   int `json:"no"` // 0=无错/大于0业务错误/小于0框架内错误
+	Data any `json:"data"`
 }
 
 func NewContext(w http.ResponseWriter, r *http.Request) *Context {
@@ -67,7 +65,7 @@ func (o Context) ParsePostData(v any) error {
 func (o Context) JsonOrigin(data any) {
 	bs, err := json.Marshal(data)
 	if err != nil {
-		o.Json(-1, err.Error(), "error", err.Error())
+		o.Json(-1, err.Error())
 		return
 	}
 	o.W.Header().Set("x-flowid", o.FlowID)
@@ -75,7 +73,7 @@ func (o Context) JsonOrigin(data any) {
 	o.W.Write(bs)
 }
 
-func (o Context) Json(no int, data any, er, msg string) {
+func (o Context) Json(no int, data any) {
 	bs, err := json.Marshal(&JSONData{No: no, Data: data})
 	if err != nil {
 		o.W.Write([]byte(fmt.Sprintf(`{"no":-1, "data":"%s"}`, err.Error())))
@@ -86,11 +84,11 @@ func (o Context) Json(no int, data any, er, msg string) {
 }
 
 func (o Context) JsonSuccess(data any) {
-	o.Json(0, data, "", "ok")
+	o.Json(0, data)
 }
 
 func (o Context) JsonFailed(data string) {
-	o.Json(1, data, "error", data)
+	o.Json(1, data)
 }
 
 func (o Context) HTML(data string) {

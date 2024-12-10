@@ -11,7 +11,7 @@ func DBInit() {
 	var err error
 
 	// 连接、初始化数据库
-	if DB, err = yafeng.NewDB(&TableUser{}); err != nil {
+	if DB, err = yafeng.NewDB(yafeng.GetEnv("DSN", "./sqlite.db"), &TableUser{}); err != nil {
 		log.Fatal(err)
 	}
 
