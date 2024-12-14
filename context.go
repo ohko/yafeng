@@ -15,10 +15,12 @@ import (
 )
 
 var (
-	ErrClose = YFError(errors.New("CLOSE"))
+	ErrClose = &YFError{"CLOSE"}
 )
 
-type YFError error
+type YFError struct{ s string }
+
+func (o *YFError) Error() string { return o.s }
 
 type Context struct {
 	W      http.ResponseWriter

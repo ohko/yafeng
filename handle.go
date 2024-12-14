@@ -86,7 +86,8 @@ func Middleware(f func(*Context)) func(http.ResponseWriter, *http.Request) {
 		defer func() {
 			if perr := recover(); perr != nil {
 				switch perr.(type) {
-				case YFError:
+				case YFError, *YFError:
+					log.Println(perr)
 				default:
 					log.Println(perr)
 					for i := 5; i >= 1; i-- {
