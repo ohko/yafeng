@@ -2,9 +2,9 @@
 package config
 
 type TableUser struct {
-	ID       int    `gorm:"user_id;primary_key"`
-	Account  string `gorm:"account;index:check;unique"`
-	Password string `gorm:"password;index:check" json:"-"`
+	UserID   int    `gorm:"column:user_id;primaryKey;autoIncrement" json:"user_id"`
+	Account  string `gorm:"column:account;index:check;unique" json:"account"`
+	Password string `gorm:"column:password;index:check" json:"-" json:"password"`
 
-	Token string `gorm:"-"`
+	Token string `gorm:"-" json:"token"`
 }

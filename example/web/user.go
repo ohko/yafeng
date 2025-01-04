@@ -34,7 +34,7 @@ func (User) Login(ctx *yafeng.Context) {
 	}
 
 	// 设置auth
-	tk := auth.NewAuth(info.ID, ctx.GetRealIP())
+	tk := auth.NewAuth(info.UserID, ctx.GetRealIP())
 	info.Token, err = tk.EnToken()
 	if err != nil {
 		ctx.JsonFailed(err.Error())

@@ -35,13 +35,13 @@ func UserChange(ctx *yafeng.Context, id int, password string) error {
 	}
 
 	// 查询用户
-	info := &config.TableUser{ID: id}
+	info := &config.TableUser{UserID: id}
 	if err := ctx.Tx.Where(&info).First(&info).Error; err != nil {
 		return err
 	}
 
 	// 更新
-	if err := ctx.Tx.Where(&config.TableUser{ID: id}).Updates(&config.TableUser{Password: yafeng.Hash(password)}).Error; err != nil {
+	if err := ctx.Tx.Where(&config.TableUser{UserID: id}).Updates(&config.TableUser{Password: yafeng.Hash(password)}).Error; err != nil {
 		return err
 	}
 
@@ -55,7 +55,7 @@ func UserInfo(ctx *yafeng.Context, id int) (*config.TableUser, error) {
 	}
 
 	// 查询用户
-	info := &config.TableUser{ID: id}
+	info := &config.TableUser{UserID: id}
 	if err := ctx.Tx.Where(&info).First(&info).Error; err != nil {
 		return nil, err
 	}
